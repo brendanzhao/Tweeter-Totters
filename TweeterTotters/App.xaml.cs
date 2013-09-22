@@ -1,17 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-
-namespace TweeterTotters
+﻿namespace TweeterTotters
 {
+    using System;
+    using System.Windows;
+    
     /// <summary>
-    /// Interaction logic for App.xaml
+    /// Where all the magic begins.
     /// </summary>
     public partial class App : Application
     {
+        /// <summary>
+        /// The main starting point for the application.
+        /// </summary>
+        /// <param name="sender">An <see cref="object"/> representing the source of the event.</param>
+        /// <param name="e">An <see cref="EventArgs"/> containing the event data.</param>
+        private void Application_StartUp(object sender, StartupEventArgs e)
+        {
+            MainWindow window = new MainWindow();
+        }
     }
 }
