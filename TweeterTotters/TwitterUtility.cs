@@ -50,5 +50,31 @@
                 throw new WebException(service.Response.ToString());
             }
         }
+
+        /// <summary>
+        /// Gets the user that logged into Twitter and then checks to see if an error has occurred.
+        /// </summary>
+        /// <param name="service">A <see cref="TwitterService"/> used to call the Twitter API.</param>
+        /// <returns>A <see cref="TwitterUser"/> representing the user that is logged in.</returns>
+        public static TwitterUser GetCurrentUser(TwitterService service)
+        {
+            TwitterUser user = service.GetUserProfile(new GetUserProfileOptions());
+            TwitterUtility.CheckError(service);
+            return user;
+        }
+
+        /// <summary>
+        /// Gets a collection of the most recent home page tweets.
+        /// </summary>
+        /// <param name="service">A <see cref="TwitterService"/> used to call the Twitter API.</param>
+        /// <returns>An <see cref="IEnumerable"/> of TwitterStatus' that represent a collection of home page tweets.</returns>
+        public static IEnumerable<TwitterStatus> GetHomePageTweets(TwitterService service)
+        {
+            IEnumerable<TwitterStatus> tweets = service.ListTweetsOnHomeTimeline(new ListTweetsOnHomeTimelineOptions());
+            TwitterUtility.CheckError(service);
+            return tweets;
+        }
+
+        
     }
 }
