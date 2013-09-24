@@ -12,7 +12,7 @@
         /// <summary>
         /// Represents the currently logged in user.
         /// </summary>
-        TwitterUser currentUser;
+        private TwitterUser currentUser;
 
         /// <summary>
         /// Represents the service connecting to Twitter.
