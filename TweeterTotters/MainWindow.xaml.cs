@@ -36,7 +36,7 @@
             currentUser = TwitterUtility.GetCurrentUser(service);
 
             this.DataContext = currentUser;
-            MainDisplay.ItemsSource = tweets;
+            mainDisplay.ItemsSource = tweets;
         }
     }
 }

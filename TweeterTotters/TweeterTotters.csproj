@@ -65,6 +65,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DateTimeStringFormatConverter.cs" />
+    <Compile Include="TextBoxTextToVisibilityConverter.cs" />
     <Compile Include="TwitterUtility.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -17,8 +17,13 @@
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Microsoft Interface")]
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            DateTime localTime = TimeZoneInfo.ConvertTime((DateTime)value, TimeZoneInfo.Local);
-            return localTime.ToString(CultureInfo.InvariantCulture);
+            if (value is DateTime)
+            {
+                DateTime localTime = TimeZoneInfo.ConvertTime((DateTime)value, TimeZoneInfo.Local);
+                return localTime.ToString(CultureInfo.InvariantCulture);
+            }
+
+            return null;
         }
 
         /// <summary>

@@ -5,6 +5,7 @@
         Title="Twitter Client" Height="500" MinWidth="315" Width="600">
     <Window.Resources>
         <local:DateTimeStringFormatConverter x:Key="DateTimeStringFormatConverter" />
+        <local:TextBoxTextToVisibilityConverter x:Key="TextBoxTextToVisibilityConverter" />
     </Window.Resources>
     <Grid Background="#FFD8D8D8">
 
@@ -21,7 +22,7 @@
         <TabControl Grid.Row="1" BorderThickness="0" BorderBrush="White">
             <TabItem Header="Home" BorderThickness="0" BorderBrush="White">
                 <ScrollViewer Margin="0,4,0,-4" FontSize="11">
-                    <ItemsControl Name="MainDisplay" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl Name="mainDisplay" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <DockPanel VerticalAlignment="Top" >
@@ -54,9 +55,19 @@
                 <Image DockPanel.Dock="Left" Margin="10" Height="60" Width="60" Source="{Binding Path=ProfileImageUrl}"/>
                 <StackPanel DockPanel.Dock="Right" Margin="10">
                     <Button Height="40" Width="80">Tweet</Button>
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Stretch" FontSize="9" Margin="3">140</TextBlock>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Stretch" FontSize="9" Margin="3" />
                 </StackPanel>
-                <TextBox Margin="10" TextWrapping="Wrap" Text="What are you doing?"></TextBox>
+                <Grid Margin="10" Background="White">
+                    <TextBlock  Background="Transparent" Foreground="Gray" Padding="5, 3"  Text="What are you doing?">
+                        <TextBlock.Visibility>
+                            <MultiBinding Converter="{StaticResource TextBoxTextToVisibilityConverter}">
+                                <Binding ElementName="tweetBox" Path="Text.IsEmpty" />
+                                <Binding ElementName="tweetBox" Path="IsFocused" />
+                            </MultiBinding>
+                        </TextBlock.Visibility>
+                    </TextBlock>
+                    <TextBox Name="tweetBox" Background="Transparent" TextWrapping="Wrap"/>
+                </Grid>
             </DockPanel>
         </Border>
 
