@@ -6,12 +6,12 @@
     using System.Windows.Data;
 
     /// <summary>
-    /// Used to determine if the text block watermark should be displayed.
+    /// Used to determine if a watermark should be displayed on a text block.
     /// </summary>
     public class TextBoxTextToVisibilityConverter : IMultiValueConverter
     {
         /// <summary>
-        /// Converts a Textbox to a Visibility enumeration value.
+        /// Returns a visibility depending on whether a textbox is empty or is in focus.
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Microsoft Interface")]
         public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
