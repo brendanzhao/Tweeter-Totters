@@ -15,7 +15,6 @@ It is written in C# and will be using the TweetSharp library that has been recco
 -All requests to Twitter are checked for HTTP and other errors.<br />
 -Tweetbox is water marked with "What are you doing"<br />
 -Displays remaining characters left in current Tweet<br />
--
 
 ####Near Future TODO
 -When your current tweet reaches > 140 characters, trigger the tweet length counter to turn red.<br />
