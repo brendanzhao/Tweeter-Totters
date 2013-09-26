@@ -9,7 +9,7 @@
     /// Converts a DateTime object to a string.
     /// </summary>
     [ValueConversion(typeof(DateTime), typeof(string))]
-    public class DateTimeStringFormatConverter : IValueConverter
+    public class DateTimeToFormattedStringConverter : IValueConverter
     {
         /// <summary>
         /// Converts a DateTime object to a string.
