@@ -8,10 +8,15 @@
     using TweetSharp;
 
     /// <summary>
-    /// Contains general methods used to interact with Twitter.
+    /// Contains general methods and constants used to interact with Twitter.
     /// </summary>
     public static class TwitterUtility
     {
+        /// <summary>
+        /// Represents the maximum length of a tweet.
+        /// </summary>
+        public const int MaxTweetLength = 140;
+
         /// <summary>
         /// Passes my registered application credentials to Twitter and then authenticates the user using OAuth.
         /// </summary>
@@ -27,7 +32,7 @@
             Uri uri = service.GetAuthorizationUri(requestToken);
             Process.Start(uri.ToString());
 
-            string verifier = Interaction.InputBox("Login and then enter the 7 digit pin Twitter provides.", "Pin Authorization", null);
+            string verifier = Interaction.InputBox(Properties.Resources.PinLoginMessage, Properties.Resources.PinLoginTitle, null);
             OAuthAccessToken access = service.GetAccessToken(requestToken, verifier);
             service.AuthenticateWith(access.Token, access.TokenSecret);
 
@@ -44,7 +49,7 @@
         {
             if (service.Response.StatusCode != HttpStatusCode.OK || service.Response.Error != null)
             {
-                throw new WebException(service.Response.ToString());
+                throw new WebException(Properties.Resources.ErrorMessage);
             }
         }
 
@@ -70,6 +75,6 @@
             IEnumerable<TwitterStatus> tweets = service.ListTweetsOnHomeTimeline(new ListTweetsOnHomeTimelineOptions());
             TwitterUtility.CheckError(service);
             return tweets;
-        }   
+        } 
     }
 }

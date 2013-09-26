@@ -36,7 +36,7 @@
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Microsoft Interface")]
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException(Properties.Resources.ConvertNotImplemented);
         }
     }
 }

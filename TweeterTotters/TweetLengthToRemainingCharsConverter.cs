@@ -20,7 +20,7 @@
             if (value is int)
             {
                 int tweetLength = (int)value;
-                int remainingCharCount = 140 - tweetLength;
+                int remainingCharCount = TwitterUtility.MaxTweetLength - tweetLength;
 
                 return remainingCharCount.ToString();
             }
@@ -34,7 +34,7 @@
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Microsoft Interface")]
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotSupportedException("Cannot convert back.");
+            throw new NotSupportedException(Properties.Resources.ConvertNotImplemented);
         }
     }
 }
