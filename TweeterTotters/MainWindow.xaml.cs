@@ -1,6 +1,7 @@
 ﻿namespace TweeterTotters
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Windows;
     using TweetSharp;
 
@@ -22,7 +23,7 @@
         /// <summary>
         /// Represents the tweets that are currently being displayed.
         /// </summary>
-        private IEnumerable<TwitterStatus> tweets;
+        private ObservableCollection<TwitterStatus> tweets = new ObservableCollection<TwitterStatus>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class. This is the starting point for the application.
@@ -32,11 +33,26 @@
             InitializeComponent();
 
             service = TwitterUtility.CreateAndAuthenticateService(System.Configuration.ConfigurationManager.AppSettings["ConsumerKey"], System.Configuration.ConfigurationManager.AppSettings["ConsumerSecret"]);
-            tweets = TwitterUtility.GetHomePageTweets(service);
+            TwitterUtility.UpdateHomePageTweets(service, tweets);
             currentUser = TwitterUtility.GetCurrentUser(service);
 
             this.DataContext = currentUser;
             mainDisplay.ItemsSource = tweets;
+        }
+
+        /// <summary>
+        /// The click event for the tweet/reply button.
+        /// </summary>
+        /// <param name="sender">An <see cref="object"/> representing the source of the event.</param>
+        /// <param name="e">An <see cref="EventArgs"/> containing the event data.</param>
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (TwitterUtility.TweetIsValid(tweetBox.Text))
+            {
+                TwitterUtility.Tweet(service, tweetBox.Text);
+                tweetBox.Text = string.Empty;
+                TwitterUtility.UpdateHomePageTweets(service, tweets);
+            }
         }
     }
 }

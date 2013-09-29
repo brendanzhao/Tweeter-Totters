@@ -124,7 +124,7 @@
     <value>Converting back has not been implemented by the application.</value>
   </data>
   <data name="ErrorMessage" xml:space="preserve">
-    <value>An error has been caused from the http request or the TweetSharp library.</value>
+    <value>An error has been caused from the HTTP Request or the TweetSharp library.</value>
   </data>
   <data name="HomeTab" xml:space="preserve">
     <value>Home</value>

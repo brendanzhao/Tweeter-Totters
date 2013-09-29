@@ -59,7 +59,7 @@
             <DockPanel VerticalAlignment="Bottom">
                 <Image DockPanel.Dock="Left" Margin="10" Height="60" Width="60" Source="{Binding Path=ProfileImageUrl}"/>
                 <StackPanel DockPanel.Dock="Right" Margin="10">
-                    <Button Height="40" Width="80"  Content="{x:Static const:Resources.TweetButton}" />
+                    <Button Height="40" Width="80"  Content="{x:Static const:Resources.TweetButton}" Click="Button_Click" />
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Stretch" FontSize="9" Margin="3" Text="{Binding ElementName=tweetBox, Path=Text.Length, Converter={StaticResource TweetLengthToRemainingCharsConverter}}" />
                 </StackPanel>
                 <Grid Margin="10" Background="White">

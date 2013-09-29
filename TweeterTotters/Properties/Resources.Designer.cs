@@ -79,7 +79,7 @@ namespace TweeterTotters.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error has been caused from the http request or the TweetSharp library..
+        ///   Looks up a localized string similar to An error has been caused from the HTTP Request or the TweetSharp library..
         /// </summary>
         public static string ErrorMessage {
             get {

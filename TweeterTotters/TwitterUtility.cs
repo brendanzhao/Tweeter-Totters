@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Net;
     using Microsoft.VisualBasic;
@@ -69,12 +70,48 @@
         /// Gets a collection of the most recent home page tweets.
         /// </summary>
         /// <param name="service">A <see cref="TwitterService"/> used to call the Twitter API.</param>
-        /// <returns>An <see cref="IEnumerable"/> of TwitterStatus' that represent a collection of home page tweets.</returns>
-        public static IEnumerable<TwitterStatus> GetHomePageTweets(TwitterService service)
+        /// <param name="tweets">An <see cref="ObservableColletion"/> of TwitterStatus' that represent the tweets being displayed.</param>
+        /// <remarks>In order for the observable collection to properly update the UI when we get a new collection of tweets,
+        /// I cannot change the reference to our original tweets collection. I abuse the fact that C# methods are pass by
+        /// reference value so the new tweets will update without needing to be returned.</remarks>
+        public static void UpdateHomePageTweets(TwitterService service, ObservableCollection<TwitterStatus> tweets)
         {
-            IEnumerable<TwitterStatus> tweets = service.ListTweetsOnHomeTimeline(new ListTweetsOnHomeTimelineOptions());
+            tweets.Clear();
+            IEnumerable<TwitterStatus> newTweets = service.ListTweetsOnHomeTimeline(new ListTweetsOnHomeTimelineOptions());
             TwitterUtility.CheckError(service);
-            return tweets;
-        } 
+
+            foreach (TwitterStatus ts in newTweets)
+            {
+                tweets.Add(ts);
+            }
+        }
+
+        /// <summary>
+        /// Sends a new Tweet.
+        /// </summary>
+        /// <param name="service">A <see cref="TwitterService"/> used to call the Twitter API.</param>
+        /// <param name="text">A <see cref="string"/> representing the text of the Tweet.</param>
+        public static void Tweet(TwitterService service, string text)
+        {
+            service.SendTweet(new SendTweetOptions() { Status = text });
+            TwitterUtility.CheckError(service);
+        }
+
+        /// <summary>
+        /// Checks if the tweet valid and can be tweeted.
+        /// </summary>
+        /// <param name="tweet">A <see cref="string"/> representing the tweet.</param>
+        /// <returns>true if the tweet is valid; otherwise false.</returns>
+        public static bool TweetIsValid(string tweet)
+        {
+            if (string.IsNullOrWhiteSpace(tweet) || tweet.Length > 140)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
 }
