@@ -64,19 +64,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ObservableObject.cs">
+    <Compile Include="MVVMFoundation\ObservableObject.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="RelayCommand.cs">
+    <Compile Include="MVVMFoundation\RelayCommand.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="TweetLengthToRemainingCharsConverter.cs">
+    <Compile Include="Converters\TweetLengthToRemainingCharsConverter.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="DateTimeToFormattedStringConverter.cs">
+    <Compile Include="Converters\DateTimeToFormattedStringConverter.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="TextBoxTextToVisibilityConverter.cs">
+    <Compile Include="Converters\TextBoxTextToVisibilityConverter.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="TwitterUtility.cs" />
@@ -123,6 +123,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+    <Folder Include="Views\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
