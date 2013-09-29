@@ -14,7 +14,6 @@
         /// <summary>
         /// Converts a DateTime object to a string.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Microsoft Interface")]
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is DateTime)
@@ -29,7 +28,6 @@
         /// <summary>
         /// Not Implemented by the application.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Microsoft Interface")]
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException(Properties.Resources.ConvertNotImplemented);

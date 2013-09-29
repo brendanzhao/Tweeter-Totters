@@ -14,7 +14,6 @@
         /// <summary>
         /// Converts a string to an integer representing 140 minus the character count of the string.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Microsoft Interface")]
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is int)
@@ -31,7 +30,6 @@
         /// <summary>
         /// Not Implemented by the application.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "*", Justification = "Microsoft Interface")]
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException(Properties.Resources.ConvertNotImplemented);
