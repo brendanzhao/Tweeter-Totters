@@ -82,6 +82,18 @@
         }
 
         /// <summary>
+        /// Gets a collection of the most recent profile page tweets.
+        /// </summary>
+        /// <param name="service">A <see cref="TwitterService"/> used to call the Twitter API.</param>
+        /// <returns>A <see cref="IEnumerable"/> of Twitter Status' on the user's profile page.</returns>
+        public static IEnumerable<TwitterStatus> GetProfilePageTweets(TwitterService service)
+        {
+            IEnumerable<TwitterStatus> tweets = service.ListTweetsOnUserTimeline(new ListTweetsOnUserTimelineOptions());
+            TwitterAPIUtility.CheckError(service);
+            return tweets;
+        }
+
+        /// <summary>
         /// Sends a new Tweet.
         /// </summary>
         /// <param name="service">A <see cref="TwitterService"/> used to call the Twitter API.</param>

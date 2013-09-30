@@ -20,6 +20,11 @@
         private IEnumerable<TwitterStatus> homePageTweets;
 
         /// <summary>
+        /// Represents the latest profile page tweets.
+        /// </summary>
+        private IEnumerable<TwitterStatus> profilePageTweets;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TweeterTottersViewModel"/> class.
         /// </summary>
         public TweeterTottersViewModel()
@@ -28,6 +33,7 @@
             Service = TwitterAPIUtility.CreateAndAuthenticateService(System.Configuration.ConfigurationManager.AppSettings["ConsumerKey"], System.Configuration.ConfigurationManager.AppSettings["ConsumerSecret"]);
             CurrentUser = TwitterAPIUtility.GetCurrentUser(Service);
             HomePageTweets = TwitterAPIUtility.GetHomePageTweets(Service);
+            ProfilePageTweets = TwitterAPIUtility.GetProfilePageTweets(Service);
         }
 
         /// <summary>
@@ -77,6 +83,23 @@
         }
 
         /// <summary>
+        /// Gets an <see cref="IEnumerable"/> of TwitterStatus' representing the latest profile page tweets.
+        /// </summary>
+        /// <remarks>RaisePropertyChanged() had to be implemented in order for the GUI to reflect changes when the data updates.</remarks>
+        public IEnumerable<TwitterStatus> ProfilePageTweets
+        {
+            get
+            {
+                return profilePageTweets;
+            }
+            set
+            {
+                profilePageTweets = value;
+                RaisePropertyChanged("ProfilePageTweets");
+            }
+        }
+
+        /// <summary>
         /// Gets a <see cref="ICommand"/> representing the command bound to the Tweet button.
         /// </summary>
         public ICommand TweetCommand
@@ -110,6 +133,7 @@
             TwitterAPIUtility.Tweet(Service, CurrentTweet);
             CurrentTweet = string.Empty;
             HomePageTweets = TwitterAPIUtility.GetHomePageTweets(Service);
+            ProfilePageTweets = TwitterAPIUtility.GetProfilePageTweets(Service);
         }
     }
 }
