@@ -1,10 +1,10 @@
 ##Tweeter-Totters
 
 ####Background
-A little background about this project. This all started as a hack day project that I wrote during my first coop term.
+A little background about this project. This all started as a project I wrote during my first coop term.
 Just starting out and not sure where to begin, I created Tweeter Totters as a Windows Form using the [Linq 2 Twitter](http://linqtotwitter.codeplex.com/) library.
 Unfortunately I packed everything into one file because at the time I wasn't sure quite how to separate the files nicely.
-I left it as is and didn't touch it for a while and considered it one of those, it works - but not nicely projects.<br />
+I left it as is and didn't touch it for a while and considered it one of those, it works - but not nicely, type of project.<br />
 
 A few months later I learned about WPF and all it's wonderful features so I decided to get my hands dirty and completely redid 
 this project in WPF with everything overhauled and I actually decided to use the TweetSharp library instead of the [Linq 2 Twitter](http://linqtotwitter.codeplex.com/) 
