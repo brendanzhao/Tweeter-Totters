@@ -123,8 +123,11 @@
   <data name="ConvertNotImplemented" xml:space="preserve">
     <value>Converting back has not been implemented by the application.</value>
   </data>
-  <data name="ErrorMessage" xml:space="preserve">
-    <value>An error has been caused from the HTTP Request or the TweetSharp library.</value>
+  <data name="ErrorMessageHttp" xml:space="preserve">
+    <value>An error has occurred during the HTTP Request to Twitter.</value>
+  </data>
+  <data name="ErrorMessageTweetSharp" xml:space="preserve">
+    <value>An error has occurred in the TweetSharp library.</value>
   </data>
   <data name="HomeTab" xml:space="preserve">
     <value>Home</value>

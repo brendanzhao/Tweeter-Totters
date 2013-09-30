@@ -19,7 +19,7 @@
             if (value is int)
             {
                 int tweetLength = (int)value;
-                int remainingCharCount = TwitterUtility.MaxTweetLength - tweetLength;
+                int remainingCharCount = TwitterAPIUtility.MaxTweetLength - tweetLength;
 
                 return remainingCharCount.ToString();
             }

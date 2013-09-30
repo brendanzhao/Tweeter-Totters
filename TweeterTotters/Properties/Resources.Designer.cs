@@ -79,11 +79,20 @@ namespace TweeterTotters.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error has been caused from the HTTP Request or the TweetSharp library..
+        ///   Looks up a localized string similar to An error has occurred during the HTTP Request to Twitter..
         /// </summary>
-        public static string ErrorMessage {
+        public static string ErrorMessageHttp {
             get {
-                return ResourceManager.GetString("ErrorMessage", resourceCulture);
+                return ResourceManager.GetString("ErrorMessageHttp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error has occurred in the TweetSharp library..
+        /// </summary>
+        public static string ErrorMessageTweetSharp {
+            get {
+                return ResourceManager.GetString("ErrorMessageTweetSharp", resourceCulture);
             }
         }
         

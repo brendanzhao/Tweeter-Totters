@@ -2,16 +2,15 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Net;
     using Microsoft.VisualBasic;
     using TweetSharp;
 
     /// <summary>
-    /// Contains general methods and constants used to interact with Twitter.
+    /// Contains general methods and constants used to interact with the Twitter API.
     /// </summary>
-    public static class TwitterUtility
+    public static class TwitterAPIUtility
     {
         /// <summary>
         /// Represents the maximum length of a tweet.
@@ -37,7 +36,7 @@
             OAuthAccessToken access = service.GetAccessToken(requestToken, verifier);
             service.AuthenticateWith(access.Token, access.TokenSecret);
 
-            TwitterUtility.CheckError(service);
+            TwitterAPIUtility.CheckError(service);
 
             return service;
         }
@@ -48,9 +47,13 @@
         /// <param name="service">A <see cref="TwitterService"/> that is being checked for errors.</param>
         public static void CheckError(TwitterService service)
         {
-            if (service.Response.StatusCode != HttpStatusCode.OK || service.Response.Error != null)
+            if (service.Response.StatusCode != HttpStatusCode.OK)
             {
-                throw new WebException(Properties.Resources.ErrorMessage);
+                throw new WebException(Properties.Resources.ErrorMessageHttp);
+            }
+            else if (service.Response.Error != null)
+            {
+                throw new WebException(Properties.Resources.ErrorMessageTweetSharp);
             }
         }
 
@@ -62,7 +65,7 @@
         public static TwitterUser GetCurrentUser(TwitterService service)
         {
             TwitterUser user = service.GetUserProfile(new GetUserProfileOptions());
-            TwitterUtility.CheckError(service);
+            TwitterAPIUtility.CheckError(service);
             return user;
         }
 
@@ -70,20 +73,12 @@
         /// Gets a collection of the most recent home page tweets.
         /// </summary>
         /// <param name="service">A <see cref="TwitterService"/> used to call the Twitter API.</param>
-        /// <param name="tweets">An <see cref="ObservableColletion"/> of TwitterStatus' that represent the tweets being displayed.</param>
-        /// <remarks>In order for the observable collection to properly update the UI when we get a new collection of tweets,
-        /// I cannot change the reference to our original tweets collection. I abuse the fact that C# methods are pass by
-        /// reference value so the new tweets will update without needing to be returned.</remarks>
-        public static void UpdateHomePageTweets(TwitterService service, ObservableCollection<TwitterStatus> tweets)
+        /// <returns>A <see cref="IEnumerable"/> of Twitter Status' on the user's homepage.</returns>
+        public static IEnumerable<TwitterStatus> GetHomePageTweets(TwitterService service)
         {
-            tweets.Clear();
-            IEnumerable<TwitterStatus> newTweets = service.ListTweetsOnHomeTimeline(new ListTweetsOnHomeTimelineOptions());
-            TwitterUtility.CheckError(service);
-
-            foreach (TwitterStatus ts in newTweets)
-            {
-                tweets.Add(ts);
-            }
+            IEnumerable<TwitterStatus> tweets = service.ListTweetsOnHomeTimeline(new ListTweetsOnHomeTimelineOptions());
+            TwitterAPIUtility.CheckError(service);
+            return tweets;
         }
 
         /// <summary>
@@ -94,24 +89,7 @@
         public static void Tweet(TwitterService service, string text)
         {
             service.SendTweet(new SendTweetOptions() { Status = text });
-            TwitterUtility.CheckError(service);
-        }
-
-        /// <summary>
-        /// Checks if the tweet valid and can be tweeted.
-        /// </summary>
-        /// <param name="tweet">A <see cref="string"/> representing the tweet.</param>
-        /// <returns>true if the tweet is valid; otherwise false.</returns>
-        public static bool TweetIsValid(string tweet)
-        {
-            if (string.IsNullOrWhiteSpace(tweet) || tweet.Length > 140)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            TwitterAPIUtility.CheckError(service);
         }
     }
 }

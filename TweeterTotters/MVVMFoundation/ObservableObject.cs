@@ -6,7 +6,7 @@
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Also known as the custom ViewModelBase class implemented by Microsoft MVP, Josh Smith.
+    /// This is a custom ViewModelBase class editted and implemented by Microsoft MVP, Josh Smith.
     /// This is the abstract base class for any object that provides property change notifications.  
     /// </summary>
     public abstract class ObservableObject : INotifyPropertyChanged
