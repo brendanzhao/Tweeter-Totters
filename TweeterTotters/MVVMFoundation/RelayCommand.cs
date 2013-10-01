@@ -6,7 +6,6 @@
     using System.Windows.Input;
 
     /// <summary>
-    /// This is a custom RelayCommand implemented by Microsoft MVP, Josh Smith.
     /// A command whose sole purpose is to relay its functionality to other objects by
     /// invoking delegates. The default return value for the CanExecute method is 'true'.
     /// </summary>
@@ -56,7 +55,6 @@
     }
 
     /// <summary>
-    /// This is a custom RelayCommand editted and implemented by Microsoft MVP, Josh Smith.
     /// A command whose sole purpose is to relay its functionality to other objects by
     /// invoking delegates. The default return value for the CanExecute method is 'true'.
     /// </summary>
