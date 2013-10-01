@@ -18,6 +18,7 @@ my program according the design and am now finally starting to feel happy about 
 This is WPF project intended to be a desktop application providing basic to advanced Twitter functionality. <br />
 It is written in C# and is using the [TweetSharp Library](https://github.com/danielcrenna/tweetsharp) written by
 [Daniel Crenna](https://github.com/danielcrenna) that has been reccommended by Twitter.<br />
+It is also using the [custom MVVM implementations](http://msdn.microsoft.com/en-us/magazine/dd419663.aspx) of RelayCommand and ObservableObject instead of the default ones in the .NET framework.<br />
 The entire project has it's UI, logic and data seperated as laid out by the WPF [MVVM](http://msdn.microsoft.com/en-us/magazine/dd419663.aspx) 
 architectural pattern.
 
@@ -30,12 +31,11 @@ architectural pattern.
 -Tweetbox is water marked with "What are you doing?"<br />
 -Displays remaining characters left in current Tweet<br />
 -Able to Tweet with basic tweet validation<br />
--Full seperation of GUI, logic and data applied.
+-Full seperation of GUI, logic and data applied.<br />
+-View user Profile Tweets<br />
 
 ####Near Future TODO
 -When your current tweet reaches > 140 characters, trigger the tweet length counter to turn red.<br />
--View user Profile Tweets<br />
 -View Other Profile Tweets<br />
 -Be able to Reply, Favourite, Delete and Retweet<br />
 -Refactor the watermark to use a dependency property instead of the ghetto method I've implemented<br />
--Use a Style template for my ItemsControl holding all the tweets.
