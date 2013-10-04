@@ -8,7 +8,7 @@
     using TweetSharp;
 
     /// <summary>
-    /// Contains general methods and constants used to interact with the Twitter API.
+    /// Contains general methods used to interact with the Twitter API.
     /// </summary>
     public static class TwitterAPIUtility
     {
@@ -53,6 +53,17 @@
         }
 
         /// <summary>
+        /// Favorites the Tweet specified.
+        /// </summary>
+        /// <param name="service">A <see cref="TwitterService"/> used to call the Twitter API.</param>
+        /// <param name="tweetId">A <see cref="long"/> representing the id of the Tweet to favorite.</param>
+        public static void Favorite(TwitterService service, long tweetId)
+        {
+            service.FavoriteTweet(new FavoriteTweetOptions() { Id = tweetId });
+            TwitterAPIUtility.CheckError(service);
+        }
+
+        /// <summary>
         /// Gets the user that logged into Twitter and then checks to see if an error has occurred.
         /// </summary>
         /// <param name="service">A <see cref="TwitterService"/> used to call the Twitter API.</param>
@@ -65,7 +76,7 @@
         }
 
         /// <summary>
-        /// Gets a collection of the most recent home page tweets.
+        /// Gets a collection of the most recent home page Tweets.
         /// </summary>
         /// <param name="service">A <see cref="TwitterService"/> used to call the Twitter API.</param>
         /// <returns>A <see cref="IEnumerable"/> of Twitter Status' on the user's homepage.</returns>
@@ -77,7 +88,7 @@
         }
 
         /// <summary>
-        /// Gets a collection of the most recent profile page tweets.
+        /// Gets a collection of the most recent profile page Tweets.
         /// </summary>
         /// <param name="service">A <see cref="TwitterService"/> used to call the Twitter API.</param>
         /// <returns>A <see cref="IEnumerable"/> of Twitter Status' on the user's profile page.</returns>
@@ -93,10 +104,21 @@
         /// </summary>
         /// <param name="service">A <see cref="TwitterService"/> used to call the Twitter API.</param>
         /// <param name="text">A <see cref="string"/> representing the text of the Tweet.</param>
-        /// <param name="replyId">A <see cref="long"/> representing the tweet that you're replying to. When this value is 0, it is not replying to anyone.</param>
+        /// <param name="replyId">A <see cref="long"/> representing the Tweet that you're replying to. When this value is 0, it is not replying to anyone.</param>
         public static void Tweet(TwitterService service, string text, long replyId)
         {
             service.SendTweet(new SendTweetOptions() { Status = text, InReplyToStatusId = replyId });
+            TwitterAPIUtility.CheckError(service);
+        }
+
+        /// <summary>
+        /// Unfavorites the Tweet specified.
+        /// </summary>
+        /// <param name="service">A <see cref="TwitterService"/> used to call the Twitter API.</param>
+        /// <param name="tweetId">A <see cref="long"/> representing the id of the Tweet to unfavorite.</param>
+        public static void Unfavorite(TwitterService service, long tweetId)
+        {
+            service.UnfavoriteTweet(new UnfavoriteTweetOptions() { Id = tweetId });
             TwitterAPIUtility.CheckError(service);
         }
     }

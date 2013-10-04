@@ -3,25 +3,30 @@
     using System;
     using System.Globalization;
     using System.Windows.Data;
+    using System.Windows.Media;
 
     /// <summary>
-    /// Converts a DateTime object to a string.
+    /// Converts a bool to a certain brush color. Used to color hyperlinks properly if they've already been favorited or retweeted.
     /// </summary>
-    [ValueConversion(typeof(DateTime), typeof(string))]
-    public class DateTimeToFormattedStringConverter : IValueConverter
+    [ValueConversion(typeof(bool), typeof(Brush))]
+    public class BoolToColorConverter : IValueConverter
     {
         /// <summary>
-        /// Converts a DateTime object to a string.
+        /// Converts a bool to a Brush.
         /// </summary>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is DateTime)
+            if (value is bool)
             {
-                DateTime localTime = TimeZoneInfo.ConvertTime((DateTime)value, TimeZoneInfo.Local);
-                return localTime.ToString(CultureInfo.InvariantCulture);
+                bool favoritedOrRetweeted = (bool)value;
+
+                if (favoritedOrRetweeted)
+                {
+                    return (Brush)new BrushConverter().ConvertFromString("#E6B800");
+                }
             }
 
-            return null;
+            return (Brush)new BrushConverter().ConvertFromString("#666666");
         }
 
         /// <summary>
