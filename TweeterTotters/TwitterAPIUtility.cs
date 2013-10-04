@@ -13,11 +13,6 @@
     public static class TwitterAPIUtility
     {
         /// <summary>
-        /// Represents the maximum length of a tweet.
-        /// </summary>
-        public const int MaxTweetLength = 140;
-
-        /// <summary>
         /// Passes my registered application credentials to Twitter and then authenticates the user using OAuth.
         /// </summary>
         /// <param name="consumerKey">A <see cref="String"/> provided by Twitter which represents the API key associated with Tweeter Totters.</param>
@@ -98,9 +93,10 @@
         /// </summary>
         /// <param name="service">A <see cref="TwitterService"/> used to call the Twitter API.</param>
         /// <param name="text">A <see cref="string"/> representing the text of the Tweet.</param>
-        public static void Tweet(TwitterService service, string text)
+        /// <param name="replyId">A <see cref="long"/> representing the tweet that you're replying to. When this value is 0, it is not replying to anyone.</param>
+        public static void Tweet(TwitterService service, string text, long replyId)
         {
-            service.SendTweet(new SendTweetOptions() { Status = text });
+            service.SendTweet(new SendTweetOptions() { Status = text, InReplyToStatusId = replyId });
             TwitterAPIUtility.CheckError(service);
         }
     }

@@ -7,13 +7,31 @@
     <Window.Resources>
         <local:DateTimeToFormattedStringConverter x:Key="DateTimeToFormattedStringConverter" />
         <local:TextBoxTextToVisibilityConverter x:Key="TextBoxTextToVisibilityConverter" />
-        <local:TweetLengthToRemainingCharsConverter x:Key="TweetLengthToRemainingCharsConverter" />
+        <local:CheckIfLongsAreEqualConverter x:Key="CheckIfLongsAreEqualConverter" />
         <DataTemplate x:Key="TweetDisplay">
             <DockPanel VerticalAlignment="Top" >
                 <Image Margin="10,8" Height="50" Width="50" Source="{Binding Path=User.ProfileImageUrl}"/>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" Margin="10,3,10,8">
                     <TextBlock Margin="0,0,20,0" Text="{Binding Path=CreatedDate, Converter={StaticResource DateTimeToFormattedStringConverter}}" />
-                    <TextBlock Margin="0,0,20,0">Reply</TextBlock>
+                    <TextBlock Margin="0,0,20,0">
+                        <Hyperlink Command="{Binding Path=DataContext.ReplyModeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" CommandParameter="{Binding}">Reply
+                            <Hyperlink.Style>
+                                <Style TargetType="Hyperlink">
+                                    <Style.Triggers>
+                                        <DataTrigger Value="True">
+                                            <DataTrigger.Binding>
+                                                <MultiBinding Converter="{StaticResource CheckIfLongsAreEqualConverter}">
+                                                    <Binding Path="Id" />
+                                                    <Binding Path="DataContext.TweetIdToReplyTo" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type Window}}" />
+                                                </MultiBinding>
+                                            </DataTrigger.Binding>
+                                            <Setter Property="Foreground" Value="#FF003F" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Hyperlink.Style>
+                        </Hyperlink>
+                    </TextBlock>
                     <TextBlock Margin="0,0,20,0">Favourite</TextBlock>
                     <TextBlock>Retweet</TextBlock>
                 </StackPanel>
@@ -25,6 +43,32 @@
                 <TextBlock DockPanel.Dock="Top" Margin="10,0" TextWrapping="Wrap" Text="{Binding Path=Text}" />
             </DockPanel>
         </DataTemplate>
+        <Style x:Key="ToggleReplyAndTweet" TargetType="Button">
+            <Style.Setters>
+                <Setter Property="Content" Value="{x:Static const:Resources.ReplyButton}" />
+                <Setter Property="Height" Value="40" />
+                <Setter Property="Width" Value="80" />
+            </Style.Setters>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding TweetIdToReplyTo}" Value="0">
+                    <Setter Property="Content" Value="{x:Static const:Resources.TweetButton}" />
+                </DataTrigger>
+            </Style.Triggers>         
+        </Style>
+        <Style x:Key="TweetLengthRemainingCount" TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="9" />
+                <Setter Property="Margin" Value="3" />
+                <Setter Property="Text" Value="{Binding RemainingCharsInCurrentTweet}" />
+            </Style.Setters>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsTweetPastMaxLength}" Value="True">
+                    <Setter Property="Foreground" Value="Red" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
     </Window.Resources>
     <Grid Background="#FFD8D8D8">
 
@@ -62,8 +106,8 @@
             <DockPanel VerticalAlignment="Bottom">
                 <Image DockPanel.Dock="Left" Margin="10" Height="60" Width="60" Source="{Binding Path=CurrentUser.ProfileImageUrl}"/>
                 <StackPanel DockPanel.Dock="Right" Margin="10">
-                    <Button Height="40" Width="80"  Content="{x:Static const:Resources.TweetButton}" Command="{Binding TweetCommand}"/>
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Stretch" FontSize="9" Margin="3" Text="{Binding ElementName=tweetBox, Path=Text.Length, Converter={StaticResource TweetLengthToRemainingCharsConverter}}" />
+                    <Button Style="{StaticResource ToggleReplyAndTweet}" Command="{Binding TweetCommand}"/>
+                    <TextBlock Style="{StaticResource TweetLengthRemainingCount}" />
                 </StackPanel>
                 <Grid Margin="10" Background="White">
                     <TextBlock  Background="Transparent" Foreground="Gray" Padding="5, 3" Text="{x:Static const:Resources.TweetWaterMark}">
