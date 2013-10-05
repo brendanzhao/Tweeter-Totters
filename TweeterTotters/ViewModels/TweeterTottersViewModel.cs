@@ -12,27 +12,47 @@
         /// <summary>
         /// Represents the maximum valid length of a Tweet.
         /// </summary>
-        public const int MaxTweetLength = 140;
+        private const int MaxTweetLength = 140;
 
         /// <summary>
-        /// Represents the current Tweet being typed into the Tweet box.
+        /// Represents the service connecting to the Twitter API.
         /// </summary>
-        private string currentTweet = string.Empty;
+        private readonly TwitterService service;
 
         /// <summary>
-        /// Represents the latest home page Tweets.
+        /// Represents if the application is currently favoriting.
+        /// </summary>
+        private bool favoriteInProgress;
+
+        /// <summary>
+        /// Represents if the application is currently Tweeting.
+        /// </summary>
+        private bool tweetInProgress;
+
+        /// <summary>
+        /// Represents if the application is currently toggling reply mode.
+        /// </summary>
+        private bool replyModeInProgress;      
+
+        /// <summary>
+        /// Backs the CurrentTweet property.
+        /// </summary>
+        private string currentTweet = string.Empty;   
+
+        /// <summary>
+        /// Backs the TweetIdToReplyTo property.
+        /// </summary>
+        private long tweetIdToReplyTo;
+
+        /// <summary>
+        /// Backs the HomePageTweets property.
         /// </summary>
         private IEnumerable<TwitterStatus> homePageTweets;
 
         /// <summary>
-        /// Represents the latest profile page Tweets.
+        /// Backs the ProfilePageTweets property.
         /// </summary>
-        private IEnumerable<TwitterStatus> profilePageTweets;
-
-        /// <summary>
-        /// Represents the id of the Tweet being replied to. When this is equal to 0, it means it is not a reply.
-        /// </summary>
-        private long tweetIdToReplyTo;
+        private IEnumerable<TwitterStatus> profilePageTweets; 
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TweeterTottersViewModel"/> class.
@@ -40,10 +60,10 @@
         public TweeterTottersViewModel()
         {
             InitializeCommands();
-            Service = TwitterAPIUtility.CreateAndAuthenticateService(System.Configuration.ConfigurationManager.AppSettings["ConsumerKey"], System.Configuration.ConfigurationManager.AppSettings["ConsumerSecret"]);
-            CurrentUser = TwitterAPIUtility.GetCurrentUser(Service);
-            HomePageTweets = TwitterAPIUtility.GetHomePageTweets(Service);
-            ProfilePageTweets = TwitterAPIUtility.GetProfilePageTweets(Service);
+            service = TwitterAPIUtility.CreateAndAuthenticateService(System.Configuration.ConfigurationManager.AppSettings["ConsumerKey"], System.Configuration.ConfigurationManager.AppSettings["ConsumerSecret"]);
+            CurrentUser = TwitterAPIUtility.GetCurrentUser(service);
+            HomePageTweets = TwitterAPIUtility.GetHomePageTweets(service);
+            ProfilePageTweets = TwitterAPIUtility.GetProfilePageTweets(service);
         }
 
         /// <summary>
@@ -62,7 +82,7 @@
                 currentTweet = value; 
                 RaisePropertyChanged("CurrentTweet");
                 RaisePropertyChanged("RemainingCharsInCurrentTweet");
-                RaisePropertyChanged("IsTweetPastMaxLength");
+                RaisePropertyChanged("TweetIsPastMaxLength");
             }
         }
 
@@ -73,16 +93,7 @@
         {
             get;
             private set;
-        }
-
-        /// <summary>
-        /// Gets a <see cref="ICommand"/> representing the command bound to each Favorite hyperlink under each Tweet.
-        /// </summary>
-        public ICommand FavoriteCommand
-        {
-            get;
-            private set;
-        }
+        }       
 
         /// <summary>
         /// Gets an <see cref="IEnumerable"/> of TwitterStatus' representing the latest home page Tweets.
@@ -100,14 +111,6 @@
                 homePageTweets = value;
                 RaisePropertyChanged("HomePageTweets");
             }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the current Tweet is greater than 140 characters.
-        /// </summary>
-        public bool IsTweetPastMaxLength
-        {
-            get { return currentTweet.Length > MaxTweetLength; }
         }
 
         /// <summary>
@@ -129,29 +132,11 @@
         }
 
         /// <summary>
-        /// Gets an <see cref="int"/> representing the number of characters still possible to add to the current Tweet.
+        /// Gets a value indicating whether the current Tweet is greater than 140 characters.
         /// </summary>
-        public int RemainingCharsInCurrentTweet
+        public bool TweetIsPastMaxLength
         {
-            get { return MaxTweetLength - CurrentTweet.Length; }
-        }
-
-        /// <summary>
-        /// Gets a <see cref="ICommand"/> representing the command bound to each Reply hyperlink under each Tweet.
-        /// </summary>
-        public ICommand ReplyModeCommand
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets a <see cref="ICommand"/> representing the command bound to the Tweet button.
-        /// </summary>
-        public ICommand TweetCommand
-        {
-            get;
-            private set;
+            get { return currentTweet.Length > MaxTweetLength; }
         }
 
         /// <summary>
@@ -173,12 +158,38 @@
         }
 
         /// <summary>
-        /// Gets or sets a <see cref="TwitterService"/> representing the service that is connecting to Twitter
+        /// Gets an <see cref="int"/> representing the number of characters still possible to add to the current Tweet.
         /// </summary>
-        private TwitterService Service
+        public int RemainingCharsInCurrentTweet
+        {
+            get { return MaxTweetLength - CurrentTweet.Length; }
+        }
+
+        /// <summary>
+        /// Gets a <see cref="ICommand"/> representing the command bound to each Favorite hyperlink under each Tweet.
+        /// </summary>
+        public ICommand FavoriteCommand
         {
             get;
-            set;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets a <see cref="ICommand"/> representing the command bound to each Reply hyperlink under each Tweet.
+        /// </summary>
+        public ICommand ReplyModeCommand
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets a <see cref="ICommand"/> representing the command bound to the Tweet button.
+        /// </summary>
+        public ICommand TweetCommand
+        {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -186,9 +197,9 @@
         /// </summary>
         public void InitializeCommands()
         {
-            FavoriteCommand = new RelayCommand<TwitterStatus>(ExecuteFavorite);
-            ReplyModeCommand = new RelayCommand<TwitterStatus>(ExecuteReplyMode);
-            TweetCommand = new RelayCommand(ExecuteTweet, () => !string.IsNullOrWhiteSpace(CurrentTweet) && CurrentTweet.Length <= MaxTweetLength);           
+            FavoriteCommand = new RelayCommand<TwitterStatus>(ExecuteFavorite, (obj) => !favoriteInProgress);
+            ReplyModeCommand = new RelayCommand<TwitterStatus>(ExecuteReplyMode, (obj) => !replyModeInProgress);
+            TweetCommand = new RelayCommand(ExecuteTweet, () => !string.IsNullOrWhiteSpace(CurrentTweet) && CurrentTweet.Length <= MaxTweetLength && !tweetInProgress);           
         }
 
         /// <summary>
@@ -197,16 +208,20 @@
         /// <param name="favoriteTweet">A <see cref="TwitterStatus"/> representing the status to be favorited.</param>
         public void ExecuteFavorite(TwitterStatus favoriteTweet)
         {
+            favoriteInProgress = true;
+
             if (favoriteTweet.IsFavorited)
             {
-                TwitterAPIUtility.Unfavorite(Service, favoriteTweet.Id);
+                TwitterAPIUtility.Unfavorite(service, favoriteTweet.Id);
                 favoriteTweet.IsFavorited = false;
             }
             else
             {
-                TwitterAPIUtility.Favorite(Service, favoriteTweet.Id);
+                TwitterAPIUtility.Favorite(service, favoriteTweet.Id);
                 favoriteTweet.IsFavorited = true;
             }
+
+            favoriteInProgress = false;
         }
 
         /// <summary>
@@ -215,6 +230,8 @@
         /// <param name="replyTweet">A <see cref="TwitterStatus"/> containing information about the Tweet being replied to.</param>
         public void ExecuteReplyMode(TwitterStatus replyTweet)
         {
+            replyModeInProgress = true;
+
             if (TweetIdToReplyTo == replyTweet.Id)
             {
                 TweetIdToReplyTo = 0;
@@ -225,6 +242,8 @@
                 TweetIdToReplyTo = replyTweet.Id;
                 CurrentTweet = string.Format("@{0} ", replyTweet.User.ScreenName);
             }
+
+            replyModeInProgress = false;
         }
 
         /// <summary>
@@ -232,10 +251,14 @@
         /// </summary>
         public void ExecuteTweet()
         {
-            TwitterAPIUtility.Tweet(Service, CurrentTweet, tweetIdToReplyTo);
+            tweetInProgress = true;
+
+            TwitterAPIUtility.Tweet(service, CurrentTweet, tweetIdToReplyTo);
             CurrentTweet = string.Empty;
-            HomePageTweets = TwitterAPIUtility.GetHomePageTweets(Service);
-            ProfilePageTweets = TwitterAPIUtility.GetProfilePageTweets(Service);
-        }    
+            HomePageTweets = TwitterAPIUtility.GetHomePageTweets(service);
+            ProfilePageTweets = TwitterAPIUtility.GetProfilePageTweets(service);
+
+            tweetInProgress = false;
+        }  
     }
 }

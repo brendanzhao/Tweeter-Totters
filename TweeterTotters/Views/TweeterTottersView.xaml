@@ -11,11 +11,11 @@
         <local:BoolToColorConverter x:Key="BoolToColorConverter" />
         <DataTemplate x:Key="TweetDisplay">
             <DockPanel VerticalAlignment="Top" >
-                <Image Margin="10,8" Height="50" Width="50" Source="{Binding Path=User.ProfileImageUrl}"/>
+                <Image Margin="10,8" Height="50" Width="50" Source="{Binding User.ProfileImageUrl}"/>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" Margin="10,3,10,8">
-                    <TextBlock Margin="0,0,20,0" Text="{Binding Path=CreatedDate, Converter={StaticResource DateTimeToFormattedStringConverter}}" />
+                    <TextBlock Margin="0,0,20,0" Text="{Binding CreatedDate, Converter={StaticResource DateTimeToFormattedStringConverter}}" />
                     <TextBlock Margin="0,0,20,0">
-                        <Hyperlink  Command="{Binding Path=DataContext.ReplyModeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" CommandParameter="{Binding}">Reply
+                        <Hyperlink  Command="{Binding DataContext.ReplyModeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" CommandParameter="{Binding}">Reply
                             <Hyperlink.Style>
                                 <Style TargetType="Hyperlink">
                                     <Setter Property="Foreground" Value="#666666" />
@@ -38,7 +38,7 @@
                         </Hyperlink>
                     </TextBlock>
                     <TextBlock Margin="0,0,20,0">
-                        <Hyperlink Command="{Binding Path=DataContext.FavoriteCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" CommandParameter="{Binding}">Favorite
+                        <Hyperlink Command="{Binding DataContext.FavoriteCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" CommandParameter="{Binding}">Favorite
                             <Hyperlink.Style>
                                 <Style TargetType="Hyperlink">
                                     <Setter Property="Foreground" Value="{Binding IsFavorited, Converter={StaticResource BoolToColorConverter}}" />
@@ -54,11 +54,11 @@
                     <TextBlock>Retweet</TextBlock>
                 </StackPanel>
                 <TextBlock DockPanel.Dock="Top" Margin="10,8,10,3">
-                    <Run Text="{Binding Path=User.Name}" />
+                    <Run Text="{Binding User.Name}" />
                     <Run Text="{x:Static const:Resources.RealNameUserNameSeparator}" />
-                    <Run Text="{Binding Path=User.ScreenName}" />
+                    <Run Text="{Binding User.ScreenName}" />
                 </TextBlock>
-                <TextBlock DockPanel.Dock="Top" Margin="10,0" TextWrapping="Wrap" Text="{Binding Path=Text}" />
+                <TextBlock DockPanel.Dock="Top" Margin="10,0" TextWrapping="Wrap" Text="{Binding Text}" />
             </DockPanel>
         </DataTemplate>
         <Style x:Key="ToggleReplyAndTweet" TargetType="Button">
@@ -81,7 +81,7 @@
                 <Setter Property="Text" Value="{Binding RemainingCharsInCurrentTweet}" />
             </Style.Setters>
             <Style.Triggers>
-                <DataTrigger Binding="{Binding IsTweetPastMaxLength}" Value="True">
+                <DataTrigger Binding="{Binding TweetIsPastMaxLength}" Value="True">
                     <Setter Property="Foreground" Value="Red" />
                 </DataTrigger>
             </Style.Triggers>
@@ -98,7 +98,7 @@
 
         <Border Grid.Row="0" BorderThickness="0,2,0,0" VerticalAlignment="Top" Background="#FFD8D8D8" BorderBrush="#FF5B5B5B">
             <TextBlock Margin="12,0,0,0" FontFamily="FreesiaUPC" FontSize="30">
-                <Run Text="{Binding Path=CurrentUser.Name}" />
+                <Run Text="{Binding CurrentUser.Name}" />
                 <Run Text="{x:Static const:Resources.ClientTitle}" />
             </TextBlock>
         </Border>
@@ -110,7 +110,7 @@
                     </ItemsControl>
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="{Binding Path=CurrentUser.Name}" BorderThickness="0" BorderBrush="White">
+            <TabItem Header="{Binding CurrentUser.Name}" BorderThickness="0" BorderBrush="White">
                 <ScrollViewer Margin="0,4,0,-4" FontSize="11">
                     <ItemsControl ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding ProfilePageTweets}" ItemTemplate="{StaticResource TweetDisplay}">
                     </ItemsControl>
@@ -122,7 +122,7 @@
 
         <Border Grid.Row="2" BorderThickness="0,2" VerticalAlignment="Top" Background="#FFD8D8D8" BorderBrush="#FF5B5B5B">
             <DockPanel VerticalAlignment="Bottom">
-                <Image DockPanel.Dock="Left" Margin="10" Height="60" Width="60" Source="{Binding Path=CurrentUser.ProfileImageUrl}"/>
+                <Image DockPanel.Dock="Left" Margin="10" Height="60" Width="60" Source="{Binding CurrentUser.ProfileImageUrl}"/>
                 <StackPanel DockPanel.Dock="Right" Margin="10">
                     <Button Style="{StaticResource ToggleReplyAndTweet}" Command="{Binding TweetCommand}"/>
                     <TextBlock Style="{StaticResource TweetLengthRemainingCount}" />
