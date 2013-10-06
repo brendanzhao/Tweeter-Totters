@@ -27,7 +27,7 @@
 
             return Visibility.Visible;
         }
-        
+
         /// <summary>
         /// Not implemented by the application.
         /// </summary>

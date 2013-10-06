@@ -53,6 +53,17 @@
         }
 
         /// <summary>
+        /// Deletes the Tweet specified.
+        /// </summary>
+        /// <param name="service">A <see cref="TwitterService"/> used to call the Twitter API.</param>
+        /// <param name="tweetId">A <see cref="long"/> representing the id of the Tweet to delete.</param>
+        public static void DeleteTweet(TwitterService service, long tweetId)
+        {
+            service.DeleteTweet(new DeleteTweetOptions() { Id = tweetId, TrimUser = true });
+            TwitterAPIUtility.CheckError(service);
+        }
+
+        /// <summary>
         /// Favorites the Tweet specified.
         /// </summary>
         /// <param name="service">A <see cref="TwitterService"/> used to call the Twitter API.</param>
@@ -97,6 +108,17 @@
             IEnumerable<TwitterStatus> tweets = service.ListTweetsOnUserTimeline(new ListTweetsOnUserTimelineOptions());
             TwitterAPIUtility.CheckError(service);
             return tweets;
+        }
+
+        /// <summary>
+        /// Retweets the Tweet specified.
+        /// </summary>
+        /// <param name="service">A <see cref="TwitterService"/> used to the call the Twitter API.</param>
+        /// <param name="tweetId">A <see cref="long"/> representing the Tweet to retweet.</param>
+        public static void Retweet(TwitterService service, long tweetId)
+        {
+            service.Retweet(new RetweetOptions() { Id = tweetId, TrimUser = true });
+            TwitterAPIUtility.CheckError(service);
         }
 
         /// <summary>

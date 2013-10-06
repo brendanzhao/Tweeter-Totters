@@ -51,8 +51,21 @@
                             </Hyperlink.Style>
                         </Hyperlink>
                     </TextBlock>
-                    <TextBlock>Retweet</TextBlock>
-                </StackPanel>
+                    <TextBlock  Margin="0,0,20,0">
+                        <Hyperlink Command="{Binding DataContext.RetweetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" CommandParameter="{Binding}">Retweet
+                            <Hyperlink.Style>
+                                <Style TargetType="Hyperlink">
+                                    <Setter Property="Foreground" Value="{Binding IsTruncated, Converter={StaticResource BoolToColorConverter}}" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Foreground" Value="#E6B800" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Hyperlink.Style>
+                        </Hyperlink>
+                    </TextBlock>
+                </StackPanel>                    
                 <TextBlock DockPanel.Dock="Top" Margin="10,8,10,3">
                     <Run Text="{Binding User.Name}" />
                     <Run Text="{x:Static const:Resources.RealNameUserNameSeparator}" />

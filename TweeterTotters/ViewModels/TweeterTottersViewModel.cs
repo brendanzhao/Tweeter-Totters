@@ -20,9 +20,24 @@
         private readonly TwitterService service;
 
         /// <summary>
+        /// Represents if the application is currently deleting.
+        /// </summary>
+        private bool deleteInProgress;
+
+        /// <summary>
         /// Represents if the application is currently favoriting.
         /// </summary>
         private bool favoriteInProgress;
+
+        /// <summary>
+        /// Represents if the application is currently toggling reply mode.
+        /// </summary>
+        private bool replyModeInProgress;
+
+        /// <summary>
+        /// Represents if the application is currently retweeting.
+        /// </summary>
+        private bool retweetInProgress;
 
         /// <summary>
         /// Represents if the application is currently Tweeting.
@@ -30,14 +45,9 @@
         private bool tweetInProgress;
 
         /// <summary>
-        /// Represents if the application is currently toggling reply mode.
-        /// </summary>
-        private bool replyModeInProgress;      
-
-        /// <summary>
         /// Backs the CurrentTweet property.
         /// </summary>
-        private string currentTweet = string.Empty;   
+        private string currentTweet = string.Empty;
 
         /// <summary>
         /// Backs the TweetIdToReplyTo property.
@@ -52,7 +62,7 @@
         /// <summary>
         /// Backs the ProfilePageTweets property.
         /// </summary>
-        private IEnumerable<TwitterStatus> profilePageTweets; 
+        private IEnumerable<TwitterStatus> profilePageTweets;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TweeterTottersViewModel"/> class.
@@ -62,8 +72,7 @@
             InitializeCommands();
             service = TwitterAPIUtility.CreateAndAuthenticateService(System.Configuration.ConfigurationManager.AppSettings["ConsumerKey"], System.Configuration.ConfigurationManager.AppSettings["ConsumerSecret"]);
             CurrentUser = TwitterAPIUtility.GetCurrentUser(service);
-            HomePageTweets = TwitterAPIUtility.GetHomePageTweets(service);
-            ProfilePageTweets = TwitterAPIUtility.GetProfilePageTweets(service);
+            Refresh();
         }
 
         /// <summary>
@@ -72,14 +81,14 @@
         /// <remarks>RaisePropertyChanged() had to be implemented in order for the GUI reflect changes when the data updates.</remarks>
         public string CurrentTweet
         {
-            get 
-            { 
-                return currentTweet; 
+            get
+            {
+                return currentTweet;
             }
 
-            private set 
-            { 
-                currentTweet = value; 
+            private set
+            {
+                currentTweet = value;
                 RaisePropertyChanged("CurrentTweet");
                 RaisePropertyChanged("RemainingCharsInCurrentTweet");
                 RaisePropertyChanged("TweetIsPastMaxLength");
@@ -93,7 +102,7 @@
         {
             get;
             private set;
-        }       
+        }
 
         /// <summary>
         /// Gets an <see cref="IEnumerable"/> of TwitterStatus' representing the latest home page Tweets.
@@ -101,9 +110,9 @@
         /// <remarks>RaisePropertyChanged() had to be implemented in order for the GUI to reflect changes when the data updates.</remarks>
         public IEnumerable<TwitterStatus> HomePageTweets
         {
-            get 
-            { 
-                return homePageTweets; 
+            get
+            {
+                return homePageTweets;
             }
 
             private set
@@ -166,6 +175,15 @@
         }
 
         /// <summary>
+        /// Gets a <see cref="ICommand"/> representing the command to each Delete hyperlink under each user Tweet.
+        /// </summary>
+        public ICommand DeleteCommand
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// Gets a <see cref="ICommand"/> representing the command bound to each Favorite hyperlink under each Tweet.
         /// </summary>
         public ICommand FavoriteCommand
@@ -178,6 +196,15 @@
         /// Gets a <see cref="ICommand"/> representing the command bound to each Reply hyperlink under each Tweet.
         /// </summary>
         public ICommand ReplyModeCommand
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets a <see cref="ICommand"/> representing the command bound to each Retweet hyperlink under each Tweet.
+        /// </summary>
+        public ICommand RetweetCommand
         {
             get;
             private set;
@@ -197,9 +224,25 @@
         /// </summary>
         public void InitializeCommands()
         {
+            DeleteCommand = new RelayCommand<TwitterStatus>(ExecuteDelete, (obj) => !deleteInProgress);
             FavoriteCommand = new RelayCommand<TwitterStatus>(ExecuteFavorite, (obj) => !favoriteInProgress);
             ReplyModeCommand = new RelayCommand<TwitterStatus>(ExecuteReplyMode, (obj) => !replyModeInProgress);
-            TweetCommand = new RelayCommand(ExecuteTweet, () => !string.IsNullOrWhiteSpace(CurrentTweet) && CurrentTweet.Length <= MaxTweetLength && !tweetInProgress);           
+            RetweetCommand = new RelayCommand<TwitterStatus>(ExecuteRetweet, (obj) => !retweetInProgress && !obj.IsTruncated);
+            TweetCommand = new RelayCommand(ExecuteTweet, () => !string.IsNullOrWhiteSpace(CurrentTweet) && CurrentTweet.Length <= MaxTweetLength && !tweetInProgress);
+        }
+
+        /// <summary>
+        /// Deletes the specified Twitter status.
+        /// </summary>
+        /// <param name="deleteTweet">A <see cref="TwitterStatus"/> representing the status to be deleted.</param>
+        public void ExecuteDelete(TwitterStatus deleteTweet)
+        {
+            deleteInProgress = true;
+
+            TwitterAPIUtility.DeleteTweet(service, deleteTweet.Id);
+            Refresh();
+
+            deleteInProgress = false;
         }
 
         /// <summary>
@@ -247,7 +290,22 @@
         }
 
         /// <summary>
-        /// Sends the current Tweet and then refreshes the Tweets on the app.
+        /// Retweets the specified Twitter status.
+        /// </summary>
+        /// <param name="retweetTweet">A <see cref="TwitterStatus"/> representing the status to be retweeted.</param>
+        public void ExecuteRetweet(TwitterStatus retweetTweet)
+        {
+            retweetInProgress = true;
+
+            TwitterAPIUtility.Retweet(service, retweetTweet.Id);
+            retweetTweet.IsTruncated = true;
+            Refresh();
+
+            retweetInProgress = false;
+        }
+
+        /// <summary>
+        /// Sends the current Tweet.
         /// </summary>
         public void ExecuteTweet()
         {
@@ -255,10 +313,82 @@
 
             TwitterAPIUtility.Tweet(service, CurrentTweet, tweetIdToReplyTo);
             CurrentTweet = string.Empty;
-            HomePageTweets = TwitterAPIUtility.GetHomePageTweets(service);
-            ProfilePageTweets = TwitterAPIUtility.GetProfilePageTweets(service);
+            Refresh();
 
             tweetInProgress = false;
-        }  
+        }
+
+        /// <summary>
+        /// A really dirty hack to set the IsTruncated property of a collection ofTwitterStatus to represent if the user has Retweeted the TwitterStatus.
+        /// </summary>
+        /// <param name="tweets">An <see cref="IEnumerable"/> of TwitterStatus' to be modified.</param>
+        /// <remarks>The TweetSharp library does not expose the "retweeted" JSON element from it's REST API calls when it GETs Tweets.
+        /// The TwitterStatus class also does not define a bool to indicate whether the TwitterStatus is retweeted so I'm just basically 
+        /// misusing an existing property that I don't need. The TweetSharp library however DOES expose the entire raw JSON source so
+        /// in order to not have to redo a ton of code because of this third party library flaw, I'm doing a really really sketchy
+        /// manual string search to parse the JSON and see if the TwitterStatus has been retweeted. REALLY DIRTY LOL.
+        /// The alternative is sending an additional request for each Tweet loaded to get a list of it's retweets and then
+        /// do a search of the user's associated with each retweet and check if the current user is in that list. 40 extra
+        /// requests on application startup seemed unfavorable to this hack.</remarks>
+        private void IsTruncatedToIsRetweetedHack(IEnumerable<TwitterStatus> tweets)
+        {
+            // if you find this string, then the tweet has been retweeted
+            string trueJSON = "\"retweeted\": true,";
+
+            // if you find this string, then the tweet is not retweeted
+            string falseJSON = "\"retweeted\": false,";
+
+            // if there's if find both JSON element strings, then we'll assume it's not been retweeted.
+            int occurrencesTrue;
+            int occurrencesFalse;
+
+            // used to determine what's left to check in the RawSource for any more occurrences of the specified JSON
+            int currentIndex;
+
+            foreach (TwitterStatus ts in tweets)
+            {
+                occurrencesTrue = 0;
+                occurrencesFalse = 0;
+                currentIndex = 0;
+
+                while ((currentIndex = ts.RawSource.IndexOf(trueJSON, currentIndex)) != -1)
+                {
+                    currentIndex += trueJSON.Length;
+                    occurrencesTrue++;
+                }
+
+                currentIndex = 0;
+
+                while ((currentIndex = ts.RawSource.IndexOf(falseJSON, currentIndex)) != -1)
+                {
+                    currentIndex += falseJSON.Length;
+                    occurrencesFalse++;
+                }
+
+                if (occurrencesTrue >= 1 && occurrencesFalse == 0)
+                {
+                    ts.IsTruncated = true;
+                }
+                else if (occurrencesFalse >= 1 && occurrencesTrue == 0)
+                {
+                    ts.IsTruncated = false;
+                }
+                else
+                {
+                    ts.IsTruncated = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Refreshes the Tweets loaded to the application.
+        /// </summary>
+        private void Refresh()
+        {
+            HomePageTweets = TwitterAPIUtility.GetHomePageTweets(service);
+            ProfilePageTweets = TwitterAPIUtility.GetProfilePageTweets(service);
+            IsTruncatedToIsRetweetedHack(homePageTweets);
+            IsTruncatedToIsRetweetedHack(profilePageTweets);
+        }
     }
 }
