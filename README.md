@@ -34,8 +34,10 @@ and ObservableObject instead of the default classes in the .NET framework.
 -Tweet hyperlinks change colours to indicate if the Tweet is currently being replied to, or is favorited.
 
 ####Near Future TODO
--View Other Profile Tweets<br />
 -View Direct Messages<br />
--Be able to Delete and Retweet<br />
+-Be able to Delete<br />
 -Retweet hyperlink should not appear if the user has his profile set to private<br />
 -Refactor the watermark to use a dependency property instead of the ghetto method I've implemented<br />
+
+####Bugs
+-Favoriting or Retweeting a Retweet messes up the application. The Twitter API appears to return false for both the retweet and the original tweet when I query for favorited and retweeted.
