@@ -70,8 +70,12 @@
     <Compile Include="Converters\CheckIfLongsAreEqualConverter.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="Converters\InvertedBoolToVisibilityConverter.cs" />
-    <Compile Include="Converters\LongsToVisibilityConverter.cs" />
+    <Compile Include="Converters\InvertedBoolToVisibilityConverter.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Converters\LongsToVisibilityConverter.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="MVVMFoundation\ObservableObject.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>

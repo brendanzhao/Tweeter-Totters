@@ -20,29 +20,9 @@
         private readonly TwitterService service;
 
         /// <summary>
-        /// Represents if the application is currently deleting.
+        /// Represents if the application is currently waiting on a Twitter API request.
         /// </summary>
-        private bool deleteInProgress;
-
-        /// <summary>
-        /// Represents if the application is currently favoriting.
-        /// </summary>
-        private bool favoriteInProgress;
-
-        /// <summary>
-        /// Represents if the application is currently toggling reply mode.
-        /// </summary>
-        private bool replyModeInProgress;
-
-        /// <summary>
-        /// Represents if the application is currently retweeting.
-        /// </summary>
-        private bool retweetInProgress;
-
-        /// <summary>
-        /// Represents if the application is currently Tweeting.
-        /// </summary>
-        private bool tweetInProgress;
+        private bool requestInProgress;
 
         /// <summary>
         /// Backs the CurrentTweet property.
@@ -224,11 +204,11 @@
         /// </summary>
         public void InitializeCommands()
         {
-            DeleteCommand = new RelayCommand<TwitterStatus>(ExecuteDelete, (obj) => !deleteInProgress);
-            FavoriteCommand = new RelayCommand<TwitterStatus>(ExecuteFavorite, (obj) => !favoriteInProgress);
-            ReplyModeCommand = new RelayCommand<TwitterStatus>(ExecuteReplyMode, (obj) => !replyModeInProgress);
-            RetweetCommand = new RelayCommand<TwitterStatus>(ExecuteRetweet, (obj) => { return obj == null ? false : !retweetInProgress && !obj.IsTruncated; });
-            TweetCommand = new RelayCommand(ExecuteTweet, () => !string.IsNullOrWhiteSpace(CurrentTweet) && CurrentTweet.Length <= MaxTweetLength && !tweetInProgress);
+            DeleteCommand = new RelayCommand<TwitterStatus>(ExecuteDelete, (obj) => !requestInProgress);
+            FavoriteCommand = new RelayCommand<TwitterStatus>(ExecuteFavorite, (obj) => !requestInProgress);
+            ReplyModeCommand = new RelayCommand<TwitterStatus>(ExecuteReplyMode, (obj) => !requestInProgress);
+            RetweetCommand = new RelayCommand<TwitterStatus>(ExecuteRetweet, (obj) => { return obj == null ? false : !requestInProgress && !obj.IsTruncated; });
+            TweetCommand = new RelayCommand(ExecuteTweet, () => !string.IsNullOrWhiteSpace(CurrentTweet) && CurrentTweet.Length <= MaxTweetLength && !requestInProgress);
         }
 
         /// <summary>
@@ -237,12 +217,12 @@
         /// <param name="deleteTweet">A <see cref="TwitterStatus"/> representing the status to be deleted.</param>
         public void ExecuteDelete(TwitterStatus deleteTweet)
         {
-            deleteInProgress = true;
+            requestInProgress = true;
 
             TwitterAPIUtility.DeleteTweet(service, deleteTweet.Id);
             Refresh();
 
-            deleteInProgress = false;
+            requestInProgress = false;
         }
 
         /// <summary>
@@ -251,7 +231,7 @@
         /// <param name="favoriteTweet">A <see cref="TwitterStatus"/> representing the status to be favorited.</param>
         public void ExecuteFavorite(TwitterStatus favoriteTweet)
         {
-            favoriteInProgress = true;
+            requestInProgress = true;
 
             if (favoriteTweet.IsFavorited)
             {
@@ -264,7 +244,7 @@
                 favoriteTweet.IsFavorited = true;
             }
 
-            favoriteInProgress = false;
+            requestInProgress = false;
         }
 
         /// <summary>
@@ -273,7 +253,7 @@
         /// <param name="replyTweet">A <see cref="TwitterStatus"/> containing information about the Tweet being replied to.</param>
         public void ExecuteReplyMode(TwitterStatus replyTweet)
         {
-            replyModeInProgress = true;
+            requestInProgress = true;
 
             if (TweetIdToReplyTo == replyTweet.Id)
             {
@@ -286,7 +266,7 @@
                 CurrentTweet = string.Format("@{0} ", replyTweet.User.ScreenName);
             }
 
-            replyModeInProgress = false;
+            requestInProgress = false;
         }
 
         /// <summary>
@@ -295,13 +275,13 @@
         /// <param name="retweetTweet">A <see cref="TwitterStatus"/> representing the status to be retweeted.</param>
         public void ExecuteRetweet(TwitterStatus retweetTweet)
         {
-            retweetInProgress = true;
+            requestInProgress = true;
 
             TwitterAPIUtility.Retweet(service, retweetTweet.Id);
             retweetTweet.IsTruncated = true;
             Refresh();
 
-            retweetInProgress = false;
+            requestInProgress = false;
         }
 
         /// <summary>
@@ -309,14 +289,14 @@
         /// </summary>
         public void ExecuteTweet()
         {
-            tweetInProgress = true;
+            requestInProgress = true;
 
             TwitterAPIUtility.Tweet(service, CurrentTweet, TweetIdToReplyTo);
             CurrentTweet = string.Empty;
             TweetIdToReplyTo = 0;
             Refresh();
 
-            tweetInProgress = false;
+            requestInProgress = false;
         }
 
         /// <summary>

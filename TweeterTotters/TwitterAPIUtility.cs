@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Net;
+    using System.Windows;
     using Microsoft.VisualBasic;
     using TweetSharp;
 
@@ -42,9 +43,17 @@
         /// <param name="service">A <see cref="TwitterService"/> that is being checked for errors.</param>
         public static void CheckError(TwitterService service)
         {
+            //if (service.Response.StatusCode == HttpStatusCode.
             if (service.Response.StatusCode != HttpStatusCode.OK)
             {
-                throw new WebException(Properties.Resources.ErrorMessageHttp);
+                if (service.Response.RateLimitStatus.RemainingHits == 0)
+                {
+                    MessageBox.Show(string.Format("You have been rate limited. Did you know there is maximum request limit of 15 per 15 minutes? Try again at {0}", service.Response.RateLimitStatus.ResetTime));
+                }
+                else
+                {
+                    throw new WebException(Properties.Resources.ErrorMessageHttp);
+                }
             }
             else if (service.Response.Error != null)
             {
