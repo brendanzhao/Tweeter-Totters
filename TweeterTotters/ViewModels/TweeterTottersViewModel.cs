@@ -227,7 +227,7 @@
             DeleteCommand = new RelayCommand<TwitterStatus>(ExecuteDelete, (obj) => !deleteInProgress);
             FavoriteCommand = new RelayCommand<TwitterStatus>(ExecuteFavorite, (obj) => !favoriteInProgress);
             ReplyModeCommand = new RelayCommand<TwitterStatus>(ExecuteReplyMode, (obj) => !replyModeInProgress);
-            RetweetCommand = new RelayCommand<TwitterStatus>(ExecuteRetweet, (obj) => { return obj == null ? false : !retweetInProgress && obj.IsTruncated; });
+            RetweetCommand = new RelayCommand<TwitterStatus>(ExecuteRetweet, (obj) => { return obj == null ? false : !retweetInProgress && !obj.IsTruncated; });
             TweetCommand = new RelayCommand(ExecuteTweet, () => !string.IsNullOrWhiteSpace(CurrentTweet) && CurrentTweet.Length <= MaxTweetLength && !tweetInProgress);
         }
 
