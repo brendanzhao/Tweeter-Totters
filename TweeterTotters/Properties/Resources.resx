@@ -124,7 +124,7 @@
     <value>Converting back has not been implemented by the application.</value>
   </data>
   <data name="ErrorMessageHttp" xml:space="preserve">
-    <value>An error has occurred during the HTTP Request to Twitter.</value>
+    <value>The HTTP request didn't go through properly. Perhaps you've been rate limited.</value>
   </data>
   <data name="ErrorMessageTweetSharp" xml:space="preserve">
     <value>An error has occurred in the TweetSharp library.</value>

@@ -311,8 +311,9 @@
         {
             tweetInProgress = true;
 
-            TwitterAPIUtility.Tweet(service, CurrentTweet, tweetIdToReplyTo);
+            TwitterAPIUtility.Tweet(service, CurrentTweet, TweetIdToReplyTo);
             CurrentTweet = string.Empty;
+            TweetIdToReplyTo = 0;
             Refresh();
 
             tweetInProgress = false;
@@ -387,8 +388,8 @@
         {
             HomePageTweets = TwitterAPIUtility.GetHomePageTweets(service);
             ProfilePageTweets = TwitterAPIUtility.GetProfilePageTweets(service);
-            IsTruncatedToIsRetweetedHack(homePageTweets);
-            IsTruncatedToIsRetweetedHack(profilePageTweets);
+            IsTruncatedToIsRetweetedHack(HomePageTweets);
+            IsTruncatedToIsRetweetedHack(ProfilePageTweets);
         }
     }
 }

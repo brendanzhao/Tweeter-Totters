@@ -10,6 +10,7 @@
         <local:CheckIfLongsAreEqualConverter x:Key="CheckIfLongsAreEqualConverter" />
         <local:BoolToColorConverter x:Key="BoolToColorConverter" />
         <local:InvertedBoolToVisibilityConverter x:Key="InvertedBoolToVisibilityConverter" />
+        <local:LongsToVisibilityConverter x:Key="LongsToVisibilityConverter" />
         <Style x:Key="DockPanelDisplay" TargetType="DockPanel">
             <Setter Property="VerticalAlignment" Value="Top" />
         </Style>
@@ -79,6 +80,20 @@
                 </Hyperlink.Style>
             </Hyperlink>
         </TextBlock>
+        <TextBlock x:Key="DeleteLink" x:Shared="False" Margin="0,0,20,0">
+            <Hyperlink Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" CommandParameter="{Binding}">Delete
+                <Hyperlink.Style>
+                    <Style TargetType="Hyperlink">
+                        <Setter Property="Foreground" Value="#666666" />
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="#E6B800" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Hyperlink.Style>
+            </Hyperlink>
+        </TextBlock>
         <Style x:Key="UserNameText" TargetType="TextBlock">
             <Setter Property="DockPanel.Dock" Value="Top" />
             <Setter Property="Margin" Value="10,8,10,3" />
@@ -105,6 +120,14 @@
                     <ContentPresenter Content="{StaticResource ReplyLink}" />
                     <ContentPresenter Content="{StaticResource FavoriteLink}" />
                     <ContentPresenter Content="{StaticResource RetweetLink}" />
+                    <ContentPresenter Content="{StaticResource DeleteLink}">
+                        <ContentPresenter.Visibility>
+                            <MultiBinding Converter="{StaticResource LongsToVisibilityConverter}">
+                                <Binding Path="User.Id" />
+                                <Binding Path="DataContext.CurrentUser.Id" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type Window}}" />
+                            </MultiBinding>
+                        </ContentPresenter.Visibility>
+                    </ContentPresenter>
                 </StackPanel>
                 <TextBlock Style="{StaticResource UserNameText}" />
                 <TextBlock Style="{StaticResource Tweet}" />
@@ -117,6 +140,7 @@
                     <TextBlock Style="{StaticResource CreatedDate}" />
                     <ContentPresenter Content="{StaticResource ReplyLink}" />
                     <ContentPresenter Content="{StaticResource FavoriteLink}" />
+                    <ContentPresenter Content="{StaticResource DeleteLink}" />
                 </StackPanel>
                 <TextBlock Style="{StaticResource UserNameText}" />
                 <TextBlock Style="{StaticResource Tweet}" />

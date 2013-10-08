@@ -79,7 +79,7 @@ namespace TweeterTotters.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error has occurred during the HTTP Request to Twitter..
+        ///   Looks up a localized string similar to The HTTP request didn&apos;t go through properly. Perhaps you&apos;ve been rate limited..
         /// </summary>
         public static string ErrorMessageHttp {
             get {

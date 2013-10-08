@@ -71,6 +71,7 @@
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Converters\InvertedBoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\LongsToVisibilityConverter.cs" />
     <Compile Include="MVVMFoundation\ObservableObject.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
