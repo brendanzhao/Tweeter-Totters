@@ -126,6 +126,9 @@
   <data name="ErrorMessageHttp" xml:space="preserve">
     <value>The HTTP request didn't go through properly. Perhaps you've been rate limited.</value>
   </data>
+  <data name="ErrorMessageRateLimit" xml:space="preserve">
+    <value>You have been rate limited. Did you know there is maximum request limit of 15 per 15 minutes? Try again at {0}</value>
+  </data>
   <data name="ErrorMessageTweetSharp" xml:space="preserve">
     <value>An error has occurred in the TweetSharp library.</value>
   </data>

@@ -88,6 +88,15 @@ namespace TweeterTotters.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You have been rate limited. Did you know there is maximum request limit of 15 per 15 minutes? Try again at {0}.
+        /// </summary>
+        public static string ErrorMessageRateLimit {
+            get {
+                return ResourceManager.GetString("ErrorMessageRateLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error has occurred in the TweetSharp library..
         /// </summary>
         public static string ErrorMessageTweetSharp {

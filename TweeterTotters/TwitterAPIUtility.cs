@@ -48,7 +48,7 @@
             {
                 if (service.Response.RateLimitStatus.RemainingHits == 0)
                 {
-                    MessageBox.Show(string.Format("You have been rate limited. Did you know there is maximum request limit of 15 per 15 minutes? Try again at {0}", service.Response.RateLimitStatus.ResetTime));
+                    MessageBox.Show(string.Format(Properties.Resources.ErrorMessageRateLimit, service.Response.RateLimitStatus.ResetTime));
                 }
                 else
                 {

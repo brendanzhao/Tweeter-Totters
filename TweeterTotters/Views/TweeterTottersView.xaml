@@ -201,7 +201,6 @@
                     </ItemsControl>
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="{x:Static const:Resources.MessageTab}" BorderThickness="0" BorderBrush="White"></TabItem>
         </TabControl>
 
         <Border Grid.Row="2" BorderThickness="0,2" VerticalAlignment="Top" Background="#FFD8D8D8" BorderBrush="#FF5B5B5B">
