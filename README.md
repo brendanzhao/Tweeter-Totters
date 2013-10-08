@@ -1,43 +1,25 @@
-##Tweeter-Totters
-
-####Background
-A little background about this project. This all started as a project I wrote during my first coop term.
-Just starting out and not sure where to begin, I created Tweeter Totters as a Windows Form using the [Linq 2 Twitter](http://linqtotwitter.codeplex.com/) library.
-Unfortunately I packed everything into one file because at the time I wasn't sure quite how to separate the files nicely.
-I left it as is and didn't touch it for a while and considered it one of those, it works - but not nicely, type of project.<br />
-
-A few months later I learned about WPF and all it's wonderful features so I decided to get my hands dirty and completely redid 
-this project in WPF with everything overhauled and I actually decided to use the TweetSharp library instead of the Linq 2 Twitter
-library this time. Although I wrote it better this time round, it still felt cluttered.<br />
-
-Soon after that though I discovered an architectural pattern called [MVVM](http://msdn.microsoft.com/en-us/magazine/dd419663.aspx)
-by Josh Smith and decided that this was ultimately how I should be designing Tweeter Totters. I completely refactored my code and architected
-my program according the design and am now finally starting to feel happy about the project and where it is now.
-
+<h2 align="center">Tweeter Totters</h2>
+<p align="center"><img src="http://oi43.tinypic.com/10hvpz8.jpg" /></p>
 ####About
-This is C# WPF project written in the MVVM pattern and is intended to be a desktop application providing basic to advanced Twitter functionality.
+This is a C# WPF project written in the [MVVM](http://msdn.microsoft.com/en-us/magazine/dd419663.aspx) pattern and is intended to be an intertactive desktop application providing Twitter functionality.
 It's using the [TweetSharp Library](https://github.com/danielcrenna/tweetsharp) written by
 [Daniel Crenna](https://github.com/danielcrenna) and it's also using the custom MVVM implementations of RelayCommand 
 and ObservableObject instead of the default classes in the .NET framework.
 
-####Current Working Functionality/Features
+####Features
 -An aesthetically pleasant GUI<br />
--User authentication<br />
--View homepage and profile page tweets along with information about the tweet (user, date, name, profile picture)<br />
--Date is shown in user's timezone instead of standard UCT timezone<br />
--All requests to Twitter are checked for HTTP and TweetSharp errors.<br />
--Tweetbox is water marked with "What are you doing?"<br />
--Displays remaining characters left in current Tweet and turns red when you pass the maximum length.<br />
--Able to Tweet with basic tweet validation (tweet button will disable)<br />
--Can reply to Tweets<br />
--Can favourite Tweets<br />
--Tweet hyperlinks change colours to indicate if the Tweet is currently being replied to, or is favorited.
-
-####Near Future TODO
--View Direct Messages<br />
--Be able to Delete<br />
--Retweet hyperlink should not appear if the user has his profile set to private<br />
--Refactor the watermark to use a dependency property instead of the ghetto method I've implemented<br />
+-Users can authenticate and login to their Twitter<br />
+-Homepage and profile page Tweets are displayed<br />
+-Each Tweet is attached with a respective Date, Reply button, Favorite button, Retweet button and Delete button<br />
+-Protected user's tweets will not have a Retweet button and only the authenticated user's will have a Delete button<br />
+-All requests to the Twitter API are checked for HTTP and TweetSharp errors.<br />
+-The Tweet box is watermarked with the classic "What are you doing?"<br />
+-There is a counter that triggers red when your tweet has past the maximum length<br />
+-There is basic validation on all buttons such that you can't spam commands and commands enable/disable appropriately<br />
 
 ####Bugs
--Favoriting or Retweeting a Retweet messes up the application. The Twitter API appears to return false for both the retweet and the original tweet when I query for favorited and retweeted.
+-Favoriting or Retweeting a Retweet messes up the application. The Twitter API (and/or TweetSharp) appears to return false for both the retweet and the original tweet when I query if they're favorited or retweeted.
+
+####Note
+-Due to the way the Twitter API works, you can not "un-retweet" but instead to delete a retweet, you need to simply
+enter your profile page tab and delete the retweet from there.
