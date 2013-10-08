@@ -141,9 +141,6 @@
   <data name="PinLoginTitle" xml:space="preserve">
     <value>Pin Authorization</value>
   </data>
-  <data name="RealNameUserNameSeparator" xml:space="preserve">
-    <value>  |  @</value>
-  </data>
   <data name="ReplyButton" xml:space="preserve">
     <value>Reply</value>
   </data>

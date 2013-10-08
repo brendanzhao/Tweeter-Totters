@@ -15,9 +15,7 @@
         {
             if (values[0] is long && values[1] is long)
             {
-                long tweetId1 = (long)values[0];
-                long tweetId2 = (long)values[1];
-                return tweetId1 == tweetId2;
+                return (long)values[0] == (long)values[1];
             }
 
             return false;

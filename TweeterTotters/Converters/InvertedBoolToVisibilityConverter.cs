@@ -2,26 +2,26 @@
 {
     using System;
     using System.Globalization;
+    using System.Windows;
     using System.Windows.Data;
-    using System.Windows.Media;
 
     /// <summary>
     /// Converts a bool to a certain brush color. Used to color hyperlinks properly if they've already been favorited or retweeted.
     /// </summary>
-    [ValueConversion(typeof(bool), typeof(Brush))]
-    public class BoolToColorConverter : IValueConverter
+    [ValueConversion(typeof(bool), typeof(Visibility))]
+    public class InvertedBoolToVisibilityConverter : IValueConverter
     {
         /// <summary>
-        /// Converts a bool to a Brush.
+        /// Converts a bool to the Visibility enumeration.
         /// </summary>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is bool)
             {
-                return (bool)value ? (Brush)new BrushConverter().ConvertFromString("#E6B800") : (Brush)new BrushConverter().ConvertFromString("#666666");
+                return (bool)value ? Visibility.Collapsed : Visibility.Visible;
             }
 
-            return (Brush)new BrushConverter().ConvertFromString("#666666");
+            return Visibility.Collapsed;
         }
 
         /// <summary>

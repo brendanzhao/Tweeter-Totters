@@ -9,69 +9,117 @@
         <local:TextBoxTextToVisibilityConverter x:Key="TextBoxTextToVisibilityConverter" />
         <local:CheckIfLongsAreEqualConverter x:Key="CheckIfLongsAreEqualConverter" />
         <local:BoolToColorConverter x:Key="BoolToColorConverter" />
-        <DataTemplate x:Key="TweetDisplay">
-            <DockPanel VerticalAlignment="Top" >
-                <Image Margin="10,8" Height="50" Width="50" Source="{Binding User.ProfileImageUrl}"/>
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" Margin="10,3,10,8">
-                    <TextBlock Margin="0,0,20,0" Text="{Binding CreatedDate, Converter={StaticResource DateTimeToFormattedStringConverter}}" />
-                    <TextBlock Margin="0,0,20,0">
-                        <Hyperlink  Command="{Binding DataContext.ReplyModeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" CommandParameter="{Binding}">Reply
-                            <Hyperlink.Style>
-                                <Style TargetType="Hyperlink">
-                                    <Setter Property="Foreground" Value="#666666" />
-                                    <Style.Triggers>
-                                        <DataTrigger Value="True">
-                                            <DataTrigger.Binding>
-                                                <MultiBinding Converter="{StaticResource CheckIfLongsAreEqualConverter}">
-                                                    <Binding Path="Id" />
-                                                    <Binding Path="DataContext.TweetIdToReplyTo" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type Window}}" />
-                                                </MultiBinding>
-                                            </DataTrigger.Binding>
-                                            <Setter Property="Foreground" Value="#E6B800" />
-                                        </DataTrigger>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Foreground" Value="#E6B800" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Hyperlink.Style>
-                        </Hyperlink>
-                    </TextBlock>
-                    <TextBlock Margin="0,0,20,0">
-                        <Hyperlink Command="{Binding DataContext.FavoriteCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" CommandParameter="{Binding}">Favorite
-                            <Hyperlink.Style>
-                                <Style TargetType="Hyperlink">
-                                    <Setter Property="Foreground" Value="{Binding IsFavorited, Converter={StaticResource BoolToColorConverter}}" />
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Foreground" Value="#E6B800" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Hyperlink.Style>
-                        </Hyperlink>
-                    </TextBlock>
-                    <TextBlock  Margin="0,0,20,0">
-                        <Hyperlink Command="{Binding DataContext.RetweetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" CommandParameter="{Binding}">Retweet
-                            <Hyperlink.Style>
-                                <Style TargetType="Hyperlink">
-                                    <Setter Property="Foreground" Value="{Binding IsTruncated, Converter={StaticResource BoolToColorConverter}}" />
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Foreground" Value="#E6B800" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Hyperlink.Style>
-                        </Hyperlink>
-                    </TextBlock>
-                </StackPanel>                    
-                <TextBlock DockPanel.Dock="Top" Margin="10,8,10,3">
-                    <Run Text="{Binding User.Name}" />
-                    <Run Text="{x:Static const:Resources.RealNameUserNameSeparator}" />
-                    <Run Text="{Binding User.ScreenName}" />
-                </TextBlock>
-                <TextBlock DockPanel.Dock="Top" Margin="10,0" TextWrapping="Wrap" Text="{Binding Text}" />
+        <local:InvertedBoolToVisibilityConverter x:Key="InvertedBoolToVisibilityConverter" />
+        <Style x:Key="DockPanelDisplay" TargetType="DockPanel">
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        <Style x:Key="ProfileImage" TargetType="Image">
+            <Setter Property="Margin" Value="15,8" />
+            <Setter Property="Height" Value="50" />
+            <Setter Property="Width" Value="50" />
+            <Setter Property="Source" Value="{Binding User.ProfileImageUrl}" />
+        </Style>
+        <Style x:Key="HyperlinkContainer" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="DockPanel.Dock" Value="Bottom" />
+            <Setter Property="Margin" Value="10,3,10,8" />
+        </Style>
+        <Style x:Key="CreatedDate" TargetType="TextBlock">
+            <Setter Property="Margin" Value="0,0,20,0" />
+            <Setter Property="Text" Value="{Binding CreatedDate, Converter={StaticResource DateTimeToFormattedStringConverter}}" />
+        </Style>
+        <TextBlock x:Key="ReplyLink" x:Shared="False" Margin="0,0,20,0">
+            <Hyperlink  Command="{Binding DataContext.ReplyModeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" CommandParameter="{Binding}">Reply
+                <Hyperlink.Style>
+                    <Style TargetType="Hyperlink">
+                        <Setter Property="Foreground" Value="#666666" />
+                        <Style.Triggers>
+                            <DataTrigger Value="True">
+                                <DataTrigger.Binding>
+                                    <MultiBinding Converter="{StaticResource CheckIfLongsAreEqualConverter}">
+                                        <Binding Path="Id" />
+                                        <Binding Path="DataContext.TweetIdToReplyTo" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type Window}}" />
+                                    </MultiBinding>
+                                </DataTrigger.Binding>
+                                <Setter Property="Foreground" Value="#E6B800" />
+                            </DataTrigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="#E6B800" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Hyperlink.Style>
+            </Hyperlink>
+        </TextBlock>
+        <TextBlock x:Key="FavoriteLink" x:Shared="False" Margin="0,0,20,0">
+            <Hyperlink Command="{Binding DataContext.FavoriteCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" CommandParameter="{Binding}">Favorite
+                <Hyperlink.Style>
+                    <Style TargetType="Hyperlink">
+                        <Setter Property="Foreground" Value="{Binding IsFavorited, Converter={StaticResource BoolToColorConverter}}" />
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="#E6B800" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Hyperlink.Style>
+            </Hyperlink>
+        </TextBlock>
+        <TextBlock x:Key="RetweetLink" x:Shared="False" Margin="0,0,20,0" Visibility="{Binding User.IsProtected, Converter={StaticResource InvertedBoolToVisibilityConverter}}">
+            <Hyperlink Command="{Binding DataContext.RetweetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" CommandParameter="{Binding}">Retweet
+                <Hyperlink.Style>
+                    <Style TargetType="Hyperlink">
+                        <Setter Property="Foreground" Value="{Binding IsTruncated, Converter={StaticResource BoolToColorConverter}}" />
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="#E6B800" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Hyperlink.Style>
+            </Hyperlink>
+        </TextBlock>
+        <Style x:Key="UserNameText" TargetType="TextBlock">
+            <Setter Property="DockPanel.Dock" Value="Top" />
+            <Setter Property="Margin" Value="10,8,10,3" />
+            <Setter Property="Text">
+                <Setter.Value>
+                    <MultiBinding StringFormat="{}{0}  |  @{1}">
+                        <Binding Path="User.Name" />
+                        <Binding Path="User.ScreenName" />
+                    </MultiBinding>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="Tweet" TargetType="TextBlock">
+            <Setter Property="DockPanel.Dock" Value="Top" />
+            <Setter Property="Margin" Value="10,0" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Text" Value="{Binding Text}" />
+        </Style>
+        <DataTemplate x:Key="HomeDisplay">
+            <DockPanel Style="{StaticResource DockPanelDisplay}" >
+                <Image Style="{StaticResource ProfileImage}"/>
+                <StackPanel Style="{StaticResource HyperlinkContainer}">
+                    <TextBlock Style="{StaticResource CreatedDate}" />
+                    <ContentPresenter Content="{StaticResource ReplyLink}" />
+                    <ContentPresenter Content="{StaticResource FavoriteLink}" />
+                    <ContentPresenter Content="{StaticResource RetweetLink}" />
+                </StackPanel>
+                <TextBlock Style="{StaticResource UserNameText}" />
+                <TextBlock Style="{StaticResource Tweet}" />
+            </DockPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="ProfileDisplay">
+            <DockPanel Style="{StaticResource DockPanelDisplay}" >
+                <Image Style="{StaticResource ProfileImage}"/>
+                <StackPanel Style="{StaticResource HyperlinkContainer}">
+                    <TextBlock Style="{StaticResource CreatedDate}" />
+                    <ContentPresenter Content="{StaticResource ReplyLink}" />
+                    <ContentPresenter Content="{StaticResource FavoriteLink}" />
+                </StackPanel>
+                <TextBlock Style="{StaticResource UserNameText}" />
+                <TextBlock Style="{StaticResource Tweet}" />
             </DockPanel>
         </DataTemplate>
         <Style x:Key="ToggleReplyAndTweet" TargetType="Button">
@@ -84,7 +132,7 @@
                 <DataTrigger Binding="{Binding TweetIdToReplyTo}" Value="0">
                     <Setter Property="Content" Value="{x:Static const:Resources.TweetButton}" />
                 </DataTrigger>
-            </Style.Triggers>         
+            </Style.Triggers>
         </Style>
         <Style x:Key="TweetLengthRemainingCount" TargetType="TextBlock">
             <Style.Setters>
@@ -119,18 +167,17 @@
         <TabControl Grid.Row="1" BorderThickness="0" BorderBrush="White">
             <TabItem Header="{x:Static const:Resources.HomeTab}" BorderThickness="0" BorderBrush="White">
                 <ScrollViewer Margin="0,4,0,-4" FontSize="11">
-                    <ItemsControl ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding HomePageTweets}" ItemTemplate="{StaticResource TweetDisplay}">
+                    <ItemsControl ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding HomePageTweets}" ItemTemplate="{StaticResource HomeDisplay}">
                     </ItemsControl>
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="{Binding CurrentUser.Name}" BorderThickness="0" BorderBrush="White">
                 <ScrollViewer Margin="0,4,0,-4" FontSize="11">
-                    <ItemsControl ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding ProfilePageTweets}" ItemTemplate="{StaticResource TweetDisplay}">
+                    <ItemsControl ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding ProfilePageTweets}" ItemTemplate="{StaticResource ProfileDisplay}">
                     </ItemsControl>
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="{x:Static const:Resources.MessageTab}" BorderThickness="0" BorderBrush="White"></TabItem>
-            <TabItem Header="{x:Static const:Resources.SettingsTab}" BorderThickness="0" BorderBrush="White"></TabItem>
         </TabControl>
 
         <Border Grid.Row="2" BorderThickness="0,2" VerticalAlignment="Top" Background="#FFD8D8D8" BorderBrush="#FF5B5B5B">

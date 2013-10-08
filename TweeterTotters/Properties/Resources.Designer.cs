@@ -133,15 +133,6 @@ namespace TweeterTotters.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to   |  @.
-        /// </summary>
-        public static string RealNameUserNameSeparator {
-            get {
-                return ResourceManager.GetString("RealNameUserNameSeparator", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Reply.
         /// </summary>
         public static string ReplyButton {

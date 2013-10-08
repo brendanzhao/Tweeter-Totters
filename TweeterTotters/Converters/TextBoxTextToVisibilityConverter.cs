@@ -16,16 +16,10 @@
         {
             if (values[0] is bool && values[1] is bool)
             {
-                bool hasText = !(bool)values[0];
-                bool hasFocus = (bool)values[1];
-
-                if (hasFocus || hasText)
-                {
-                    return Visibility.Collapsed;
-                }
+                return (bool)values[0] && !(bool)values[1] ? Visibility.Visible : Visibility.Collapsed;
             }
-
-            return Visibility.Visible;
+            
+            return Visibility.Collapsed;
         }
 
         /// <summary>
